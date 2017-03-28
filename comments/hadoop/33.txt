@@ -1,0 +1,1 @@
+Solution 4:  We should add option in YARN to support sending addition whitelist ENV as part of ContainerLaunchContext. Addition patch for solution 4 also container-whitelist-env-wip.patch . created a jira YARN-5771 also.

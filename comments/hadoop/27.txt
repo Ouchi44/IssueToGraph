@@ -1,0 +1,1 @@
+HI Guys,    Thanks for working on this issue here. Wonder if we had a consensus about the solution? Can we document the workaround before the solution is in place?   Thanks.

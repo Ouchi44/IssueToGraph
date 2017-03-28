@@ -1,0 +1,1 @@
+Container fail to launch for mapred application.  As part for launch script HADOOP_MAPRED_HOME default value is not set .After https://github.com/apache/hadoop/commit/9d4d30243b0fc9630da51a2c17b543ef671d035c HADOOP_MAPRED_HOME is not able to get from builder.environment() since DefaultContainerExecutor#buildCommandExecutor sets inherit to false.

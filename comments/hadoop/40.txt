@@ -1,0 +1,1 @@
+I am +1 for #3. There is the yuck factor of mixing up MR into YARN, but the issue is significant enough and the change small enough that I think we can make an exception here.   We can move the discussion to the mailing list to expand the audience.

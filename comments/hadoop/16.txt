@@ -1,0 +1,1 @@
+By default HADOOP_MAPRED_HOME can be set as HADOOP_HOME. I guess this can be helpful, and not feeling this as security issue.    Agreed. If we are going to do this, we need to revert the documentation of MAPREDUCE-6702 and update the release note. Would you revert the documentation change in this issue?

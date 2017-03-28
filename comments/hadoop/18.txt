@@ -1,0 +1,1 @@
+IIUC, "HADOOP_MAPRED_HOME=" + Apps.crossPlatformify("HADOOP_MAPRED_HOME") does not fix the problem because HADOOP_MAPRED_HOME is not in yarn.nodemanager.env-whitelist by default (i.e. Container cannot inherit the NodeManager's environment variable HADOOP_MAPRED_HOME by default).

@@ -1,0 +1,1 @@
+Zhankun Tang   In nodemanager we can add the below config. Last time i checked below solution was working fine.   yarn.nodemanager.env-whitelist=  "JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME"

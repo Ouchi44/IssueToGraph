@@ -1,0 +1,1 @@
+Yongjun Zhang  Looks like you have made wrong configuration      &lt;value&gt;=JAVA_HOME       Could please remove = and try again. I thought of documenting the white list parameter configuration and closing the issue waiting for +1 which solution to take.

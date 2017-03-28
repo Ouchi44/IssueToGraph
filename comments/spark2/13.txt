@@ -1,0 +1,1 @@
+I was just today reminded of this other issue, SPARK-3942, which takes issue with shrinking step size instead of a more principled line search in L-BFGS. Worth linking this up.

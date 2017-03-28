@@ -1,0 +1,1 @@
+"Nesterov's accelerated first-order method is a drop-in replacement for steepest descent but it converges much faster. We should implement this method and compare its performance with existing algorithms, including SGD and L-BFGS."

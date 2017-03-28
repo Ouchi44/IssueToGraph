@@ -1,0 +1,1 @@
+Sunil G  Yes,Was considering this as second solution. As per the offline discussion with Rohith Sharma K S Yarn shouldn't have any MR-specific configs so setting the default value as HADOOP_COMMON_HOME for HADOOP_MAPRED_HOME should fix the problem.

@@ -1,0 +1,1 @@
+Also, after changing default value of properties, could you update ./hadoop-mapreduce-project/hadoop-mapreduce-client/hadoop-mapreduce-client-core/src/main/resources/mapred-default.xml?

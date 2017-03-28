@@ -1,0 +1,1 @@
+Either #3 (adding HADOOP_MAPRED_HOME to the classpath) or #5 (though maybe not actually using -libjars argument, but doing something equivalent) sound good to me.

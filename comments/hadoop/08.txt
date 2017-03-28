@@ -1,0 +1,1 @@
+Bibin A Chundatt / Robert Kanter   Is it possible that we can set default value to mapreduce.admin.user.env and yarn.app.mapreduce.am.env. By default HADOOP_MAPRED_HOME can be set as HADOOP_HOME. I guess this can be helpful, and not feeling this as security issue. Robert Kanter, do you any security issue if we set a default value?

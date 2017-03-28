@@ -1,0 +1,1 @@
+Robert Kanter  Thank you for clarification  As mentioned above after adding mapreduce.admin.user.env and yarn.app.mapreduce.am.env it works fine.  IMHO it will be good to make it work without setting additional parameters too. Attaching patch for the same.   Could you please point me to the JIRA for which change was done to understand further.

@@ -1,0 +1,1 @@
+0001-YARN-5026.patch implementation is based on HADOOP_MAPRED_HOME added to whitelist.

@@ -1,0 +1,1 @@
+Switching to absolute tolerance sounds reasonable.   I agree about old vs. new weight norms not making much difference. Let's go with what TFOCS does to facilitate your comparisons with the existing implementation.

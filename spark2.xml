@@ -1,0 +1,170 @@
+<rss version="0.92">
+<script/>
+<channel>
+<title>ASF JIRA</title>
+<link>https://issues.apache.org/jira</link>
+<description>This file is an XML representation of an issue</description>
+<language>en-uk</language>
+<build-info>
+<version>6.3.4</version>
+<build-number>6332</build-number>
+<build-date>15-08-2014</build-date>
+</build-info>
+<item>
+<title>
+[SPARK-1503] Implement Nesterov's accelerated first-order method
+</title>
+<link>https://issues.apache.org/jira/browse/SPARK-1503</link>
+<project id="12315420" key="SPARK">Spark</project>
+<description>
+<p>Nesterov's accelerated first-order method is a drop-in replacement for steepest descent but it converges much faster. We should implement this method and compare its performance with existing algorithms, including SGD and L-BFGS.</p> <p>TFOCS (<a href="http://cvxr.com/tfocs/" class="external-link" rel="nofollow">http://cvxr.com/tfocs/</a>) is a reference implementation of Nesterov's method and its variants on composite objectives.</p>
+</description>
+<environment/>
+<key id="12708555">SPARK-1503</key>
+<summary>
+Implement Nesterov's accelerated first-order method
+</summary>
+<type id="2" iconUrl="https://issues.apache.org/jira/images/icons/issuetypes/newfeature.png">New Feature</type>
+<priority id="3" iconUrl="https://issues.apache.org/jira/images/icons/priorities/major.png">Major</priority>
+<status id="3" iconUrl="https://issues.apache.org/jira/images/icons/statuses/inprogress.png" description="This issue is being actively worked on at the moment by the assignee.">In Progress</status>
+<statusCategory id="4" key="indeterminate" colorName="yellow"/>
+<resolution id="-1">Unresolved</resolution>
+<assignee username="staple">Aaron Staple</assignee>
+<reporter username="mengxr">Xiangrui Meng</reporter>
+<labels></labels>
+<created>Tue, 15 Apr 2014 16:56:55 +0000</created>
+<updated>Tue, 28 Jul 2015 15:47:08 +0000</updated>
+<component>MLlib</component>
+<due/>
+<votes>1</votes>
+<watches>10</watches>
+<comments>
+<comment id="14166168" author="staple" created="Fri, 10 Oct 2014 02:03:03 +0000">
+<p>Hi, I’d like to try working on this ticket. If you’d like to assign it to me, I can write a short spec and then work on a PR.</p>
+</comment>
+<comment id="14166465" author="mengxr" created="Fri, 10 Oct 2014 06:40:03 +0000">
+<p><a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=staple" class="user-hover" rel="staple">Aaron Staple</a> Thanks for picking up this JIRA! TFOCS is a good place to start. We can support AT (Auslender and Teboulle) update, line search, and restart in the first version. It would be nice to take generic composite objective functions.</p> <p>Please note that this could become a big task. We definitely need to go through the design first.</p>
+</comment>
+<comment id="14167868" author="staple" created="Sat, 11 Oct 2014 00:37:42 +0000">
+<p><a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=mengxr" class="user-hover" rel="mengxr">Xiangrui Meng</a> Thanks for the heads up! I’ll definitely go through TFOCS and am happy to work carefully and collaboratively on design.</p>
+</comment>
+<comment id="14221233" author="staple" created="Fri, 21 Nov 2014 18:45:44 +0000">
+<p><a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=mengxr" class="user-hover" rel="mengxr">Xiangrui Meng</a> Sorry for the delay. I wrote up a design proposal for the initial implementation. Let me know what you think, and if you'd like me to clarify anything.</p> <p>UPDATE: Ok, here's the document:<br/> <a href="https://docs.google.com/document/d/1L50O66LnBfVopFjptbet2ZTQRzriZTjKvlIILZwKsno/edit?usp=sharing" class="external-link" rel="nofollow">https://docs.google.com/document/d/1L50O66LnBfVopFjptbet2ZTQRzriZTjKvlIILZwKsno/edit?usp=sharing</a></p>
+</comment>
+<comment id="14224088" author="mengxr" created="Tue, 25 Nov 2014 05:36:28 +0000">
+<p><a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=staple" class="user-hover" rel="staple">Aaron Staple</a> Thanks for working on the design doc! <a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=rezazadeh" class="user-hover" rel="rezazadeh">Reza Zadeh</a> will make a pass.</p>
+</comment>
+<comment id="14224132" author="staple" created="Tue, 25 Nov 2014 06:58:48 +0000">
+<p><a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=mengxr" class="user-hover" rel="mengxr">Xiangrui Meng</a> <a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=rezazadeh" class="user-hover" rel="rezazadeh">Reza Zadeh</a> Ok, thanks for the heads up. Let me know if there’s anything about the spec that should be handled differently. I covered most of the mathematics informally (the details are already covered formally in the references). And in addition, the proposal describes a method of implementing TFOCS functionality distributively but does not investigate existing distributed optimization systems.</p>
+</comment>
+<comment id="14225295" author="rezazadeh" created="Tue, 25 Nov 2014 22:09:19 +0000">
+<p>Thanks for this design doc Aaron. </p> <p>It looks good for the first implementation to support composite objectives, A&amp;T updates, but I'm not sure about backtracking.</p> <p>Have you thought about how many passes through the data backtracking can require? As you mention: per backtracking inner loop iteration, we need 2 shuffles. But how many iterations of the inner backtracking loop can be typical? Could it be better in a distributed environment to avoid backtracking and use a constant step size? Especially for the well-behaved objectives we have (e.g. logistic regression). If a constant step size works fast enough, we should do that first - what do you think?</p> <p>Please try a constant step size first - if it works, that will bring down the communication cost greatly.</p> <p>It’s fine that the initial implementation will not include the linear operator optimizations present in TFOCS. That’s a good call. In general let’s try to keep the first PR as simple as possible.</p> <p>Please make sure your code adheres to this example for LBFGS, so we can swap out the Optimizer with your contribution:<br/> <a href="http://spark.apache.org/docs/latest/mllib-optimization.html#l-bfgs" class="external-link" rel="nofollow">http://spark.apache.org/docs/latest/mllib-optimization.html#l-bfgs</a></p>
+</comment>
+<comment id="14226958" author="staple" created="Wed, 26 Nov 2014 23:00:48 +0000">
+<p><a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=rezazadeh" class="user-hover" rel="rezazadeh">Reza Zadeh</a> Thanks for your feedback.</p> <p>Your point about the communication cost of backtracking is well taken. Just to explain where I was coming from with the design proposal: As I was looking to come up to speed on accelerated gradient descent, I came across some scattered comments online suggesting that acceleration was difficult to implement well, was finicky, etc - especially when compared with standard gradient descent for machine learning applications. So, wary of these sorts of comments, I wrote up the proposal with the intention of duplicating TFOCS as closely as possible to start with, with the possibility of making changes from there based on performance. In addition, I’d interpreted an earlier comment in this ticket as suggesting that line search be implemented in the same manner as in TFOCS.</p> <p>I am happy to implement a constant step size first, though. It may also be informative to run some performance tests in spark both with and without backtracking. One (basic, not conclusive) data point I have now is that, if I run TFOCS’ test_LASSO example it triggers 97 iterations of the outer AT loop and 106 iterations of the inner backtracking loop. For this one example, the backtracking iteration overhead is only about 10%. Though keep in mind that in spark if we removed backtracking entirely it would mean only one distributed aggregation per iteration rather than two - so a huge improvement in communication cost assuming there is still a good convergence rate.</p> <p>Incidentally, are there any specific learning benchmarks for spark that you would recommend?</p> <p>I’ll do a bit of research to identify the best ways to manage the lipschitz estimate / step size in the absence of backtracking (for our objective functions in particular). I’ve also noticed some references online to distributed implementations of accelerated methods. It may be informative to learn more about them - if you happen to have heard of any particularly good distributed optimizers using acceleration, please let me know.</p> <p>Thanks,<br/> Aaron</p> <p>PS Yes, I’ll make sure to follow the lbfgs example so the accelerated implementation can be easily substituted.</p>
+</comment>
+<comment id="14227023" author="rezazadeh" created="Thu, 27 Nov 2014 00:01:13 +0000">
+<p>Thanks Aaron. From an implementation perspective, it's probably easier to implement a constant step size first. From there you can see if there is any finicky behavior and compare to the unaccelerated proximal gradient already in Spark. If it works well enough, we should commit the first PR without backtracking, and then experiment with backtracking, otherwise if you see strange behavior then you can decide if backtracking would solve it. </p>
+</comment>
+<comment id="14350809" author="apachespark" created="Fri, 6 Mar 2015 20:00:37 +0000">
+<p>User 'staple' has created a pull request for this issue:<br/> <a href="https://github.com/apache/spark/pull/4934" class="external-link" rel="nofollow">https://github.com/apache/spark/pull/4934</a></p>
+</comment>
+<comment id="14350812" author="staple" created="Fri, 6 Mar 2015 20:03:02 +0000">
+<p>I recently created a PR for an implementation of accelerated gradient descent without backtracking, as discussed above.</p> <p>I also ran some simple, small scale (single server) benchmarks to compare different optimization methods. (The benchmark result graphs are provided as images attached to this ticket.) The optimization methods tested were:</p> <ul class="alternate" type="square"> <li>gra: existing gradient descent implementation (using full batch)</li> <li>acc: accelerated descent (as implemented in the PR), but without automatic restart</li> <li>acc_r: accelerated descent, with automatic restart</li> <li>acc_b: accelerated descent, with backtracking, without automatic restart</li> <li>acc_rb: accelerated descent, with backtracking, with automatic restart</li> <li>lbfgs: existing lbfgs implementation</li> </ul> <p>(Note that backtracking is not part of the PR, and was just tested as a point of comparison.)</p> <p>The x axis shows the number of outer loop iterations of the optimization algorithm. (Note that for backtracking implementations, the full cost of backtracking is not represented in this outer loop count. For non backtracking implementations, the number of outer loop iterations is the same as the number of spark map reduce jobs). The y axis is the log of the difference from best determined optimized value.</p> <p>The optimization test runs were:</p> <ul class="alternate" type="square"> <li>linear: A scaled up version of the test data from TFOCS’s test_LASSO.m example, with 10000 observations on 1024 features. 512 of the features are actually correlated with result. Unregularized linear regression was used. (The scala acceleration implementation was observed to be consistent with the TFOCS implementation on this dataset.)</li> <li>linear l1: The same as ‘linear’, but with l1 regularization</li> <li>logistic: Each feature of each observation is generated by summing a feature gaussian specific to the observation’s binary category with a noise gaussian. 10000 observations on 250 features. Unregularized logistic regression was used.</li> <li>logistic l2: Same as ‘logistic’, but using l2 regularization</li> </ul> <p>Note that for each test run, all optimization methods were given the same initial step size.</p> <p>Observations:</p> <ul class="alternate" type="square"> <li>Acceleration consistently converges more quickly than standard gradient descent, given the same initial step size.</li> <li>Automatic restart is helpful for acceleration convergence</li> <li>Backtracking can significantly boost convergence rates in some cases (measured in terms of outer loop iterations). But the full cost of backtracking was not measured in these runs.</li> <li>lbfgs generally outperformed accelerated gradient descent in these test runs. Accelerated gradient descent was competitive with lbfgs for linear l1 (lasso) regression. However as noted in the documentation, the L1Updater “will not work” for the lbfgs implementation. It seems l1 regularization is currently a weak spot for the lbfgs implementation.</li> </ul>
+</comment>
+<comment id="14350813" author="staple" created="Fri, 6 Mar 2015 20:04:24 +0000">
+<p>Optimization benchmarks, uploaded 2015-03-06.</p>
+</comment>
+<comment id="14355883" author="srowen" created="Tue, 10 Mar 2015 22:50:29 +0000">
+<p>I was just today reminded of this other issue, <a href="https://issues.apache.org/jira/browse/SPARK-3942" title="LogisticRegressionWithLBFGS should not use SquaredL2Updater " class="issue-link" data-issue-key="SPARK-3942"><del>SPARK-3942</del></a>, which takes issue with shrinking step size instead of a more principled line search in L-BFGS. Worth linking this up.</p>
+</comment>
+<comment id="14595226" author="josephkb" created="Sun, 21 Jun 2015 22:26:50 +0000">
+<p><a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=staple" class="user-hover" rel="staple">Aaron Staple</a> <a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=lewuathe" class="user-hover" rel="lewuathe">Kai Sasaki</a> Can you please coordinate about how convergence is measured, as in <a href="https://issues.apache.org/jira/browse/SPARK-3382" title="GradientDescent convergence tolerance" class="issue-link" data-issue-key="SPARK-3382"><del>SPARK-3382</del></a>? The current implementation for <a href="https://issues.apache.org/jira/browse/SPARK-3382" title="GradientDescent convergence tolerance" class="issue-link" data-issue-key="SPARK-3382"><del>SPARK-3382</del></a> uses relative convergence w.r.t. the weight vector, where it measures relative to the weight vector from the previous iteration. I figure we should use the same convergence criterion for both accelerated and non-accelerated gradient descent.</p>
+</comment>
+<comment id="14596991" author="staple" created="Tue, 23 Jun 2015 01:50:04 +0000">
+<p><a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=josephkb" class="user-hover" rel="josephkb">Joseph K. Bradley</a> and <a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=lewuathe" class="user-hover" rel="lewuathe">Kai Sasaki</a> Sure, happy to coordinate. So far I have just been duplicating the the convergence tolerance check in TFOCS, the matlab package on which the accelerated gradient descent implementation is based. TFOCS also tests for convergence by checking if the relative change in the weight vector is below a specified threshold. But there are some differences from the <a href="https://issues.apache.org/jira/browse/SPARK-3382" title="GradientDescent convergence tolerance" class="issue-link" data-issue-key="SPARK-3382"><del>SPARK-3382</del></a> implementation. For example in TFOCS the relative difference between new and old weight vectors is measured with respect to the new weight vector instead of the old. And if the new weight vector is smaller than the unit vector the convergence test is changed to be an absolute rather than relative difference between successive weight vectors. I am just describing the implementation here, happy to discuss further and potentially look at making changes.</p> <p>Here is the relevant code if you are interested (there is also a separate condition when the weight vector does not change between iterations):<br/> <a href="https://github.com/cvxr/TFOCS/blob/e34c0daeb136935d23b8df506de8b7b191f6b0a3/private/tfocs_iterate.m#L19-L24" class="external-link" rel="nofollow">https://github.com/cvxr/TFOCS/blob/e34c0daeb136935d23b8df506de8b7b191f6b0a3/private/tfocs_iterate.m#L19-L24</a></p>
+</comment>
+<comment id="14597195" author="josephkb" created="Tue, 23 Jun 2015 05:35:18 +0000">
+<p>Thanks! <a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=lewuathe" class="user-hover" rel="lewuathe">Kai Sasaki</a> I probably should have looked into this more carefully before your PR. It would be good to understand the best criterion. Regardless, I believe most of your PR's changes should carry over.</p> <p><a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=staple" class="user-hover" rel="staple">Aaron Staple</a> <a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=mengxr" class="user-hover" rel="mengxr">Xiangrui Meng</a> Do you know what the basis of the TFOCS stopping criterion is? I don't see that detail described in the paper.</p> <p>Barring a better understanding...I guess I'd vote to mimic TFOCS.</p>
+</comment>
+<comment id="14598709" author="staple" created="Wed, 24 Jun 2015 01:36:58 +0000">
+<p>I believe this stopping criteria was added after the paper was written. It is documented on page 8 of the userguide (<a href="https://github.com/cvxr/TFOCS/raw/master/userguide.pdf" class="external-link" rel="nofollow">https://github.com/cvxr/TFOCS/raw/master/userguide.pdf</a>) but unfortunately no explanation is provided. (The userguide also documents this as a &lt;= test, while the current code uses &lt;.) And unfortunately I couldn’t find an explanation in the code or git history.</p> <p>I think the switch to absolute tolerance may be because a relative difference measurement could be less useful when the weights are extremely small, and 1 is a convenient cutoff point. (Using 1, the equation is simple and the interpretation is clear.) I believe <a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=mengxr" class="user-hover" rel="mengxr">Xiangrui Meng</a> alluded to switching to an absolute tolerance at 1 already (<a href="https://github.com/apache/spark/pull/3636#discussion_r22078041" class="external-link" rel="nofollow">https://github.com/apache/spark/pull/3636#discussion_r22078041</a>) so he might be able to provide more information.</p> <p>With regard to using the new weight norms as the basis for measuring relative weight difference, I think that if the convergence test passes using either the old or new weight norms, then the old and new norms are going to be very similar. It may not make a significant difference which test is used. (It may also be worth pointing out that in cases where the tolerance tests with respect to different old/new weights return different results, if the tolerance wrt new weights is met (and wrt old weights is not) then the weight norm increased slightly; if the tolerance wrt the old weights is met (and wrt new weights not) then we weight norm decreased slightly.)</p> <p>Finally, TFOCS adopts a policy of skipping the convergence test on the first iteration if the weights are unchanged. I believe this condition is based on implementation specific behavior and does not need to be adopted generally.</p>
+</comment>
+<comment id="14600056" author="josephkb" created="Wed, 24 Jun 2015 20:06:57 +0000">
+<p>Switching to absolute tolerance sounds reasonable.</p> <p>I agree about old vs. new weight norms not making much difference. Let's go with what TFOCS does to facilitate your comparisons with the existing implementation.</p>
+</comment>
+<comment id="14610018" author="lewuathe" created="Wed, 1 Jul 2015 12:01:55 +0000">
+<p><a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=staple" class="user-hover" rel="staple">Aaron Staple</a> <a href="https://issues.apache.org/jira/secure/ViewProfile.jspa?name=josephkb" class="user-hover" rel="josephkb">Joseph K. Bradley</a> Thank you for pinging and inspiring information! I'll rewrite current patch based on your logic and codes. Thanks a lot.</p>
+</comment>
+<comment id="14610720" author="josephkb" created="Wed, 1 Jul 2015 17:52:23 +0000"><p>I appreciate it!</p></comment>
+<comment id="14644560" author="mengxr" created="Tue, 28 Jul 2015 15:47:08 +0000">
+<p>There are couple stop criteria in TFOCS (implemented in <a href="https://github.com/cvxr/TFOCS/blob/master/private/tfocs_iterate.m" class="external-link" rel="nofollow">https://github.com/cvxr/TFOCS/blob/master/private/tfocs_iterate.m</a> and documented in section 2.4.4 of <a href="https://github.com/cvxr/TFOCS/raw/master/userguide.pdf" class="external-link" rel="nofollow">https://github.com/cvxr/TFOCS/raw/master/userguide.pdf</a>)</p> <p>Copied from <a href="https://github.com/cvxr/TFOCS/blob/e34c0daeb136935d23b8df506de8b7b191f6b0a3/userguide.tex#L536:" class="external-link" rel="nofollow">https://github.com/cvxr/TFOCS/blob/e34c0daeb136935d23b8df506de8b7b191f6b0a3/userguide.tex#L536:</a></p> <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent"> <pre class="code-java"> \subsubsection{Stopping criteria} There are a variety of ways to decide when the algorithm should terminate: \begin{trivlist} \item \texttt{tol}: TFOCS terminates when the iterates satisfy $\|x_{k+1}-x_k\|/\max\{1,\|x_{k+1}\|\}\leq\texttt{tol}$. The <span class="code-keyword">default</span> value is $10^{-8}$; <span class="code-keyword">if</span> set to zero or a negative value, <span class="code-keyword">this</span> criterion will never be engaged. \item \texttt{maxIts}: The maximum number of iterations the algorithm should take; defaults to \verb@Inf@. \item \texttt{maxCounts}: This option causes termination after a certain number of function calls or linear operations are made; see \S\ref{sec:opcounts} <span class="code-keyword">for</span> details. It defaults to \verb@Inf@. \item \texttt{stopCrit}: Choose from one of several stopping criteria. By <span class="code-keyword">default</span>, \texttt{stopCrit} is 1, which is our recommended stopping criteria when not using the SCD model. Setting <span class="code-keyword">this</span> to 3 will use a stopping criteria applied to the dual value (so <span class="code-keyword">this</span> is only available in SCD models, where the dual is really the primal), and setting <span class="code-keyword">this</span> to 4 is similar but uses a relative error tolerance. A value of 4 is recommended when using the SCD model with continuation. For details, see the code in \verb@<span class="code-keyword">private</span>/tfocs_iterate.m@. \item \texttt{stopFcn}: This option allows you to supply one or more stopping criteria of your own design. To use it, set \verb@stopFcn@ must be a function handle or a cell array of function handles. For \verb@tfocs.m@, these function handles will be called as follows: \begin{code_} stop = stopFcn( f, x ); \end{code_} where \verb@f@ is the function value and \verb@x@ is the current point. \begin{code_} stop = stopFcn( f, z, x ); \end{code_} where \verb@f@ is the current \emph{dual} function value, \verb@z@ is the current dual point, and \verb@x@ is the current primal point. The output should either be \verb@<span class="code-keyword">true</span>@ or \verb@<span class="code-keyword">false</span>@; <span class="code-keyword">if</span> \verb@<span class="code-keyword">true</span>@, the algorithm will stop. Note that the standard stopping criteria still apply, so the algorithm will halt when any of the stopping criteria are reached. To ignore the standard stopping criteria, set \texttt{stopCrit} to $\infty$. \end{trivlist} </pre> </div></div>
+</comment>
+</comments>
+<issuelinks>
+<issuelinktype id="12310010">
+<name>Incorporates</name>
+<inwardlinks description="is part of">
+<issuelink>
+<issuekey id="12782125">SPARK-6346</issuekey>
+</issuelink>
+</inwardlinks>
+</issuelinktype>
+<issuelinktype id="10030">
+<name>Reference</name>
+<outwardlinks description="relates to">
+<issuelink>
+<issuekey id="12747959">SPARK-3942</issuekey>
+</issuelink>
+<issuelink>
+<issuekey id="12738870">SPARK-3382</issuekey>
+</issuelink>
+</outwardlinks>
+</issuelinktype>
+</issuelinks>
+<attachments>
+<attachment id="12703121" name="linear.png" size="47383" author="staple" created="Fri, 6 Mar 2015 20:04:24 +0000"/>
+<attachment id="12703122" name="linear_l1.png" size="40397" author="staple" created="Fri, 6 Mar 2015 20:04:24 +0000"/>
+<attachment id="12703123" name="logistic.png" size="39556" author="staple" created="Fri, 6 Mar 2015 20:04:24 +0000"/>
+<attachment id="12703124" name="logistic_l2.png" size="35515" author="staple" created="Fri, 6 Mar 2015 20:04:24 +0000"/>
+</attachments>
+<subtasks></subtasks>
+<customfields>
+<customfield id="customfield_12310310" key="com.atlassian.jira.toolkit:attachments">
+<customfieldname>Attachment count</customfieldname>
+<customfieldvalues>
+<customfieldvalue>4.0</customfieldvalue>
+</customfieldvalues>
+</customfield>
+<customfield id="customfield_12310220" key="com.atlassian.jira.ext.charting:firstresponsedate">
+<customfieldname>Date of First Response</customfieldname>
+<customfieldvalues>
+<customfieldvalue>Fri, 10 Oct 2014 02:03:03 +0000</customfieldvalue>
+</customfieldvalues>
+</customfield>
+<customfield id="customfield_12310420" key="com.pyxis.greenhopper.jira:gh-global-rank">
+<customfieldname>Global Rank</customfieldname>
+<customfieldvalues>
+<customfieldvalue>386878</customfieldvalue>
+</customfieldvalues>
+</customfield>
+<customfield id="customfield_12312521" key="com.atlassian.jira.toolkit:LastCommentDate">
+<customfieldname>Last public comment date</customfieldname>
+<customfieldvalues>1 year, 14 weeks, 2 days ago</customfieldvalues>
+</customfield>
+<customfield id="customfield_12311820" key="com.pyxis.greenhopper.jira:gh-lexo-rank">
+<customfieldname>Rank</customfieldname>
+<customfieldvalues>
+<customfieldvalue>0|i1unan:</customfieldvalue>
+</customfieldvalues>
+</customfield>
+<customfield id="customfield_12310920" key="com.pyxis.greenhopper.jira:gh-global-rank">
+<customfieldname>Rank (Obsolete)</customfieldname>
+<customfieldvalues>
+<customfieldvalue>387142</customfieldvalue>
+</customfieldvalues>
+</customfield>
+</customfields>
+</item>
+</channel>
+</rss>

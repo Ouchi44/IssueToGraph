@@ -1,0 +1,1 @@
+we should move this to Mapred project, if fix is on map reduce related configuration/env

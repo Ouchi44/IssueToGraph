@@ -1,0 +1,1 @@
+HADOOP_MAPRED_HOME shouldn't be necessary if you're running MR from a tarball in HDFS. If you need to add HADOOP_MAPRED_HOME, then I believe you should be able to add it to the classpath for MR jobs via mapreduce.admin.user.env.

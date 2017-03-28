@@ -1,0 +1,1 @@
+Bibin A Chundatt thanks for your contribution.     + "HADOOP_MAPRED_HOME=" + Apps.crossPlatformify("HADOOP_COMMON_HOME");    Why not making {{ "HADOOP_MAPRED_HOME="Apps.crossPlatformify("HADOOP_MAPRED_HOME");}}? I think it's more straight forward and better to understand its behaviour.

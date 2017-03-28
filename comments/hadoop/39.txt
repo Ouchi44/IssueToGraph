@@ -1,0 +1,1 @@
+Since this is a rather core issue, I'd love to see some additional opinions here. Andrew Wang, Varun Saxena, Akira Ajisaka, Sangjin Lee, Sunil G, Naganarasimha G R, Vinod Kumar Vavilapalli, any thoughts? Should we take this to the mailing list for more visibility?

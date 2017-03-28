@@ -1,0 +1,1 @@
+Currently we have changed the default behaviour. In launch_container.sh shouldn't we be adding the default value too rt??       export HADOOP_MAPRED_HOME={HADOOP_MAPRED_HOME:-xxxxx}       So that without setting mapreduce.admin.user.env also we would get the old behaviour.

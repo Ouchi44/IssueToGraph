@@ -1,0 +1,1 @@
++1 for #3.  In MAPREDUCE-6702, I wrote a patch to document that we need to set HADOOP_MAPRED_HOME=$HADOOP_COMMON_HOME to mapreduce.admin.user.env and yarn.app.mapreduce.am.env, but HADOOP_MAPRED_HOME is not always as same as HADOOP_COMMON_HOME. I'm thinking it's better to set yarn.nodemanager.env-whitelist instead of setting these parameters.

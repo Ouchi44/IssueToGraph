@@ -1,0 +1,1 @@
+There has been no guarantee that HADOOP_MAPRED_HOME is the same as HADOOP_COMMON_HOME since 0.22. See libexec/hadoop-layout.sh.example.

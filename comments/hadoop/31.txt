@@ -1,0 +1,1 @@
+Folks, is there any progress we can make on this JIRA? That this doesn't work out of the box anymore has been very surprising to our users. I'd like to get it fixed for alpha2 if possible.

@@ -1,0 +1,1 @@
+Hi, I’d like to try working on this ticket. If you’d like to assign it to me, I can write a short spec and then work on a PR.

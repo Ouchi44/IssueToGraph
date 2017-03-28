@@ -1,0 +1,1 @@
+Yep. I was planning to submit a JIRA this morning to make exactly that change.

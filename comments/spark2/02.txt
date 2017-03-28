@@ -1,0 +1,1 @@
+Aaron Staple Thanks for picking up this JIRA! TFOCS is a good place to start. We can support AT (Auslender and Teboulle) update, line search, and restart in the first version. It would be nice to take generic composite objective functions.   Please note that this could become a big task. We definitely need to go through the design first.

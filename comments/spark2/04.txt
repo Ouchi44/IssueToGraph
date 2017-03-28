@@ -1,0 +1,1 @@
+Xiangrui Meng Sorry for the delay. I wrote up a design proposal for the initial implementation. Let me know what you think, and if you'd like me to clarify anything.   UPDATE: Ok, here's the document:  https://docs.google.com/document/d/1L50O66LnBfVopFjptbet2ZTQRzriZTjKvlIILZwKsno/edit?usp=sharing
